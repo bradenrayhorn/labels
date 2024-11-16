@@ -7,22 +7,22 @@ require "prawn/measurement_extensions"
 
 # Page settings
 
-page_height    = 297.mm
-page_width     = 210.mm
-margin_top     = 12.mm
+page_height    = 279.mm
+page_width     = 216.mm
+margin_top     = 15.mm
 margin_right   = 7.mm
-margin_bottom  = 12.mm
+margin_bottom  = 13.mm
 margin_left    = 7.mm
 
-number_of_rows = 8
+number_of_rows = 10
 number_of_cols = 3
 gutter_column  = 7.mm
-gutter_row     = 7.mm
+gutter_row     = 1.mm
 
 font_family    = "IBM Plex Sans"
 font_size      = 10
 
-output_file    = "sample.pdf"
+output_file    = "labels.pdf"
 debug_mode     = false
 
 # Helper
@@ -32,7 +32,7 @@ def self.mm; send(:mm); end
 # Load CSV file, format: name, address1, address2
 
 file  = File.new('data.csv', 'r')
-data  = CSV.parse(file).reverse
+data  = CSV.parse(file, encoding: "bom|utf-8").reverse
 
 # Generates the PDF file
 
@@ -67,13 +67,13 @@ Prawn::Document.generate(
         grid(i,j).bounding_box do
           if count <= 0; break; end
           count = count-1
-          name, company, address1, address2, country = data[count]
+          name, address1, address2 = data[count]
+
           text name,           :style => :bold   if name
-          text company,        :style => :italic if company
           text address1,       :style => :normal if address1
           text address2,       :style => :normal if address2
-          text country.upcase, :style => :normal if country
           text count.to_s,     :style => :normal if debug_mode
+          font(font_family, :size => font_size)
         end
       end
     end
