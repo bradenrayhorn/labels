@@ -3,3 +3,6 @@ gen:
 
 build:
 	docker build . -t labelgen:latest
+
+get-rid-of-m:
+	tr -d '' < data.csv > data2.csv
